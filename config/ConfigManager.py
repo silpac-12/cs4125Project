@@ -2,7 +2,6 @@ import pandas as pd
 import re
 from googletrans import Translator
 
-
 # Singleton Pattern: Configuration Manager
 class ConfigManager:
     _instance = None
