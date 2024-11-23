@@ -1,0 +1,49 @@
+"""
+Module: singleton.py
+
+This module provides a generic implementation of the Singleton design pattern in Python.
+The Singleton pattern ensures that a class has ONLY ONE instance and provides a global
+access point to that instance.
+
+Classes:
+--------
+Singleton([T]):
+    A generic singleton class of type T that can be used to create a single instance of a given type.
+
+Usage:
+------
+1. To create a Singleton for a specific type:
+    from singleton import Singleton
+    
+    class MyClass:
+        pass
+    
+    instance1 = Singleton.get_instance()  # Retrieves the Singleton instance
+    instance2 = Singleton.get_instance()  # Retrieves the same instance
+    assert instance1 is instance2         # True, because both refer to the same instance
+
+2. Attempting to create a new instance directly will raise an exception:
+    obj = Singleton()  # Raises Exception: "This class is a singleton!"
+
+Notes:
+------
+- This implementation uses a private class attribute (`__instance`) to store the Singleton instance.
+- The `get_instance` method ensures thread-safe access to the instance.
+
+"""
+# Python 3.12 coming in clutch here for integrating generics.
+class Singleton[T]:
+    __instance = None 
+
+    # Global access to Singleton Instance.
+    @staticmethod 
+    def get_instance(): 
+        if Singleton.__instance == None:
+            Singleton.__instance = Singleton()
+        return Singleton.__instance
+    
+    def __init__(self):
+        if Singleton.__instance != None:
+            raise Exception("This class is a singleton!")
+        Singleton.__instance = T.__new__
+        self = Singleton.__instance

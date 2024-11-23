@@ -1,0 +1,54 @@
+import pandas as pd
+from singleton import Singleton
+
+class DataLoader[T: DataLoader](Singleton[T]):
+    def __init__(self, file_path, file_type='csv', **kwargs):
+        """
+        Initialize the DataLoader.
+
+        :param file_path: Path to the data file.
+        :param file_type: Type of the file ('csv', 'json', 'excel').
+        :param kwargs: Additional arguments for the data reading function.
+        """
+        super.__init__()
+        self.file_path = file_path
+        self.file_type = file_type.lower()
+        self.kwargs = kwargs
+        self.data = None
+
+    def load_data(self):
+        """
+        Load data based on the file type.
+
+        :return: DataFrame containing the loaded data.
+        """
+        try:
+            if self.file_type == 'csv':
+                self.data = pd.read_csv(self.file_path, **self.kwargs)
+            elif self.file_type == 'json':
+                self.data = pd.read_json(self.file_path, **self.kwargs)
+            elif self.file_type == 'excel':
+                self.data = pd.read_excel(self.file_path, **self.kwargs)
+            else:
+                raise ValueError(f"Unsupported file type: {self.file_type}")
+            print(f"Data loaded successfully from {self.file_path}")
+        except Exception as e:
+            print(f"Error loading data: {e}")
+        return self.data
+
+    def get_summary(self):
+        """
+        Provide a summary of the loaded data.
+
+        :return: Summary details or None if no data is loaded.
+        """
+        if self.data is not None:
+            return {
+                'shape': self.data.shape,
+                'columns': self.data.columns.tolist(),
+                'info': self.data.info(),
+                'head': self.data.head()
+            }
+        else:
+            print("No data loaded yet.")
+            return None
